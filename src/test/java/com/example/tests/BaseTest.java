@@ -14,8 +14,14 @@ public class BaseTest {
 
     @BeforeAll
     static void setUpPlaywright() {
+        boolean headless = Boolean.parseBoolean(
+            System.getProperty("headless", System.getenv().getOrDefault("HEADLESS", "true"))
+        );
+
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        browser = playwright.chromium().launch(
+            new BrowserType.LaunchOptions().setHeadless(headless)
+        );
     }
 
     @BeforeEach
