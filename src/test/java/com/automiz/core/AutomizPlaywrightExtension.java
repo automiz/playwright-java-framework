@@ -1,7 +1,17 @@
 package com.automiz.core;
 
-import com.microsoft.playwright.*;
-import org.junit.jupiter.api.extension.*;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 public class AutomizPlaywrightExtension implements
         BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
@@ -24,21 +34,34 @@ public class AutomizPlaywrightExtension implements
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
+        if (browser == null) {
+            throw new IllegalStateException("Browser is not initialized. Ensure AutomizPlaywrightExtension.beforeAll ran.");
+        }
         context = browser.newContext();
         page = context.newPage();
     }
 
     @Override
     public void afterEach(ExtensionContext extensionContext) {
+        if (page != null) {
+            page.close();
+            page = null;
+        }
         if (context != null) {
             context.close();
+            context = null;
         }
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) {
+        if (browser != null) {
+            browser.close();
+            browser = null;
+        }
         if (playwright != null) {
             playwright.close();
+            playwright = null;
         }
     }
 
