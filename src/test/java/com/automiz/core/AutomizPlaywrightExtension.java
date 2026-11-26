@@ -23,13 +23,27 @@ public class AutomizPlaywrightExtension implements
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        boolean headless = Boolean.parseBoolean(
-            System.getProperty("headless", System.getenv().getOrDefault("HEADLESS", "true"))
-        );
+        boolean headless = resolveHeadlessMode();
         playwright = Playwright.create();
         browser = playwright.chromium().launch(
             new BrowserType.LaunchOptions().setHeadless(headless)
         );
+    }
+
+    private boolean resolveHeadlessMode() {
+        String prop = System.getProperty("headless");
+        if (prop != null && !prop.isBlank()) {
+            return Boolean.parseBoolean(prop.trim());
+        }
+
+        String envHeadless = System.getenv("HEADLESS");
+        if (envHeadless != null && !envHeadless.isBlank()) {
+            return Boolean.parseBoolean(envHeadless.trim());
+        }
+
+        boolean isCi = "true".equalsIgnoreCase(System.getenv("CI"))
+                || "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
+        return isCi;
     }
 
     @Override
