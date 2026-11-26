@@ -2,3 +2,20 @@ target/
 .settings/
 .classpath
 .project
+
+# Logs & OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# Local secrets & environment overrides
+src/test/resources/local-*.properties
+.env
+*.local
+
+# Test outputs & Playwright artifacts
+test-output/
+surefire-reports/
+screenshots/
+traces/
+videos/

@@ -1,5 +1,6 @@
 package com.automiz.core;
 
+import com.automiz.config.ConfigManager;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -43,7 +44,11 @@ public class AutomizPlaywrightExtension implements
 
         boolean isCi = "true".equalsIgnoreCase(System.getenv("CI"))
                 || "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
-        return isCi;
+        if (isCi) {
+            return true;
+        }
+
+        return ConfigManager.getBoolean("browser.headless");
     }
 
     @Override

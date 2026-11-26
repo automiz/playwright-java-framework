@@ -1,5 +1,6 @@
 package com.automiz.pages;
 
+import com.automiz.config.ConfigManager;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -19,7 +20,7 @@ public class AuthLoginPage {
     }
 
     public void navigate() {
-        page.navigate("https://www.saucedemo.com/");
+        page.navigate(ConfigManager.get("app.base.url"));
     }
 
     public void login(String username, String password) {
